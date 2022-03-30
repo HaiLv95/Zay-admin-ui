@@ -5,7 +5,10 @@ const baseURL = "/admin/account";
 //get All Account
 export const getAllAccount = () => {
     const url = baseURL;
-    return instance.get(url);
+    Headers = {
+        "Authorization": `Bearer ${localStorage.getItem("token")}`
+    }
+    return instance.get(url, Headers);
 }
 
 //get Accouont by Username

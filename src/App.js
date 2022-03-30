@@ -1,38 +1,31 @@
 
 import './App.css';
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
-import "bootstrap/dist/css/boostrap.min.css";
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import NavBar from './component/navBar';
-import './js/templatemo.min.js';
-import './js/jquery-migrate-1.2.1.min.js';
-import './js/jquery-1.11.0.min.js';
-import './js/custom.js'
-import './css/admin.css'
-import './css/custom.css'
-import './css/fontawesome.min.css'
-import './css/slick-theme.min.css'
-import './css/slick.min.css'
-import './css/templatemo.min.css'
+import "bootstrap/dist/css/bootstrap.min.css";
+import RouterManager from './component/Router-manager';
+import { useEffect } from 'react';
+import { getAllAccount } from './api/account-instance';
+import { getAllAccountCreator } from './redux/actionCreator/accountCreator';
+import { useDispatch } from 'react-redux';
 
 
 
 
 function App() {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    try {
+      getAllAccount().then(resp => {
+        console.log('get from api', resp.data)
+        dispatch(getAllAccountCreator(resp.data))
+      });
+    } catch (e) {
+      console.log('Failed', e)
+    }
+  }, []);
   return (
     <div className="App">
-      <div className='container-fluid'>
-        <BrowserRouter>
-          <NavBar />
-          <Routes>
-            <Route path='/home' exact element={'<h1>home</h1>'}></Route>
-            <Route path='/shop' exact element={'<h1>shop</h1>'}></Route>
-            <Route path='/shopping-cart' exact element={'<h1>shoppong cart</h1>'}></Route>
-            <Route path='/signup' exact element={'<h1>signup</h1>'}></Route>
-            <Route path='/login' exact element={'<h1>login</h1>'}></Route>
-          </Routes>
-        </BrowserRouter>
-      </div>
+      <RouterManager />
     </div>
   );
 }
