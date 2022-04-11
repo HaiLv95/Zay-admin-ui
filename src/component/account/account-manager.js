@@ -1,12 +1,46 @@
-import { Link } from "react-router-dom";
-import { useSelector, useDispatch } from 'react-redux'
-import { useEffect, useState } from 'react'
+import { Link, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from 'react-redux';
 import { accountSelector } from "../../redux/actionCreator/accountSelector";
+import { deleteAccount, getAllAccount} from '../../api/account-instance';
+import { getAllAccountCreator, updateAccountCreator } from "../../redux/actionCreator/accountCreator";
+import { useEffect } from "react";
 export default function AccountManage() {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const authenticated = localStorage.getItem('authenticated')
+    console.log('auth', authenticated)
+    if (authenticated === 'false') {
+        navigate('/login')
+    }
+    const token = localStorage.getItem('token');
+    console.log('token', token)
+    useEffect(() => {
+        try {
+            if (token === null) {
+                navigate('/login')
+            } else {
+                getAllAccount().then(resp => {
+                    console.log('resp', resp)
+                    console.log('resp', resp)
+                    if (resp.status === 200) {
+                        dispatch(getAllAccountCreator(resp.data));
+                        console.log(resp)
+                    }
+                });
+            }
+        } catch (error) {
+            console.log('errors', error)
 
+        }
+    }, []);
     const accountSelect = useSelector(state => accountSelector(state));
-    console.log('account manager', accountSelect)
+    const onHandleLock = async (username) => {
 
+        await deleteAccount(username).then(resp => dispatch(updateAccountCreator(resp.data)))
+    }
+    const onHandleEdit = (username) => {
+        navigate(`/account/edit/${username}`)
+    }
     return (
         <div className="container-fluid">
             <div className="row mt-4 justify-content-center">
@@ -33,15 +67,27 @@ export default function AccountManage() {
                             </tr>
                         </thead>
                         <tbody>
-                            {accountSelect.map((account, index) =>
+                            {accountSelect.map((item, index) =>
                                 <tr>
                                     <th scope="row">{index + 1}</th>
-                                    <td>{account.username}</td>
-                                    <td>{account.fullname}</td>
-                                    <td>{account.email}</td>
-                                    <td>{account.activated ? 'active' : 'in-active'}</td>
-                                    <td>{account.activated ?
-                                        <span class="material-icons-outlined">lock</span> : <span class="material-icons-outlined">lock_open</span>}</td>
+                                    <td>{item.username}</td>
+                                    <td>{item.fullname}</td>
+                                    <td>{item.email}</td>
+                                    <td>{item.role}</td>
+                                    <td>{item.activated ? 'active' : 'in-active'}</td>
+                                    <td>
+                                        <button className="me-1" style={{ border: 'none', background: 'none' }} onClick={() => onHandleLock(item.username)}>
+                                            {item.activated ?
+                                                <span className="material-icons-outlined" style={{ color: 'blue' }}>lock_open</span>
+                                                :
+                                                <span className="material-icons-outlined" style={{ color: 'red' }}>lock</span>}
+                                        </button>
+                                        <button className="me-1" style={{ border: 'none', background: 'none' }} onClick={() => onHandleEdit(item.username)}>
+                                            <span className="material-icons-outlined" style={{ color: 'blue' }}>
+                                                edit
+                                            </span>
+                                        </button>
+                                    </td>
                                 </tr>
                             )}
                         </tbody>

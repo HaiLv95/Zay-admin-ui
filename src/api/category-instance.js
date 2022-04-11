@@ -1,9 +1,9 @@
 import instance from "./instance";
 
-const baseURL = "/admin/account";
+const baseURL = "/admin/category";
 
 //get All Account
-export const getAllAccount = () => {
+export const getAllCategory = () => {
     const url = baseURL;
     const headers = {
         headers: {
@@ -14,9 +14,9 @@ export const getAllAccount = () => {
     return instance.get(url, headers);
 }
 
-//get Accouont by Username
-export const getAccountByUsername = (username) => {
-    const url = `${baseURL}/${username}`;
+//get Category by ID
+export const getCategoryByID = (id) => {
+    const url = `${baseURL}/${id}`;
     const headers = {
         headers: {
             "Content-Type": "application/json",
@@ -26,8 +26,8 @@ export const getAccountByUsername = (username) => {
     return instance.get(url, headers);
 }
 
-//Add account
-export const saveAccount = (account) => {
+//Add category
+export const saveCategory = (data) => {
     const url = `${baseURL}/add`;
     const headers = {
         headers: {
@@ -35,11 +35,11 @@ export const saveAccount = (account) => {
             "Authorization": `${localStorage.getItem("token")}`
         }
     }
-    return instance.post(url, account, headers);
+    return instance.post(url, data, headers);
 }
 
-//Update Account
-export const updateAccount = (account) => {
+//Update category
+export const updateCategory = (data) => {
     const url = `${baseURL}/update`;
     const headers = {
         headers: {
@@ -47,12 +47,12 @@ export const updateAccount = (account) => {
             "Authorization": `${localStorage.getItem("token")}`
         }
     }
-    return instance.put(url, account, headers);
+    return instance.put(url, data, headers);
 }
 
-//Delete Account
-export const deleteAccount = (username) => {
-    const url = `${baseURL}/delete/${username}`;
+//Delete category
+export const deleteCategory = (id) => {
+    const url = `${baseURL}/delete/${id}`;
     console.log(url);
     const headers = {
         headers: {
@@ -63,8 +63,3 @@ export const deleteAccount = (username) => {
     return instance.delete(url, headers);
 }
 
-//login
-export const logon = (logonData) => {
-    const url = '/logon';
-    return instance.post(url, logonData);
-}

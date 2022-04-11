@@ -1,10 +1,10 @@
 const initState = {
-    filters: {},
     accounts: []
 }
 
 export default function accountAdminReducer(state = initState, action) {
-    console.log(action.type, action.payload)
+    console.log('payload', action.payload)
+    console.log('type', action.type)
     /*
         //b1: copy lai list accounts
             ...state,
@@ -26,15 +26,16 @@ export default function accountAdminReducer(state = initState, action) {
                 accounts: state.accounts.map(item => item.username === action.payload.username ? action.payload : item)
 
             };
-        case 'admin/lockAccount':
-            return {
-                ...state,
-                accounts: state.accounts.map(item => item.username === action.payload ? (item.activated = !item.activated) : item)
-            };
 
         case 'admin/getAllAccount':
             return {
                 accounts: action.payload
+            }
+
+        case 'admin/removeAllAccount':
+            return{
+                ...state,
+                accounts:[]
             }
 
         default:

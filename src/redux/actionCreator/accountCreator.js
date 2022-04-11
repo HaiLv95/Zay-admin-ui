@@ -11,15 +11,14 @@ export const updateAccountCreator = (data) => {
         payload: data
     }
 }
-export const deleteAccountCreator= (data) => {
-    return {
-        type: 'admin/deleteAccount',
-        payload: data
-    }
-}
 export const getAllAccountCreator = (data) => {
     return {
         type: 'admin/getAllAccount',
         payload: data
+    }
+}
+export const removeAllAccountCreator = () => {
+    return {
+        type: 'admin/removeAllAccount'
     }
 }
