@@ -6,6 +6,7 @@ import NavBar from "./home/navBar";
 import OrderManage from "./order/order-manager";
 import AddProduct from "./product/add-product";
 import ProductManage from "./product/product-manager";
+import Home from "./home/home";
 
 
 export default function RouterManager() {
@@ -14,7 +15,7 @@ export default function RouterManager() {
             <BrowserRouter>
                 <NavBar />
                 <Routes>
-                    <Route path='/home' element={'<h1>home</h1>'}></Route>
+                    <Route path='/' element={<Home/>}></Route>
                     <Route path='/account/add' element={<AddAccount />}></Route>
                     <Route path='/product/add' element={<AddProduct />}></Route>
                     <Route path='/product/edit/:id' element={<AddProduct />}></Route>

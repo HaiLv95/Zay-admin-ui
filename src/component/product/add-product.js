@@ -51,6 +51,9 @@ export default function AddProduct() {
     const onHandleCancel = () => {
         navigate("/product/manager")
     }
+    const showImage = (data) => {
+        document.getElementById('img').src = data
+    }
     return (
         <div className="container-fluid">
             <div className="row mt-4 justify-content-center">
@@ -65,13 +68,13 @@ export default function AddProduct() {
                     </ul>
                 </div>
                 <div className="col-md-10">
-                    <div className="row justify-content-center">
-                        {isEdit ?
-                            <h1 className="text-success">UPDATE PRODUCT</h1>
-                            :
-                            <h1 className="text-success">ADD PRODUCT</h1>}
-                        <div className="col-md-6">
-                            <form className="" onSubmit={handleSubmit(onHandleSubmit)}>
+                    {isEdit ?
+                        <h1 className="text-success">UPDATE PRODUCT</h1>
+                        :
+                        <h1 className="text-success">ADD PRODUCT</h1>}
+                    <form className="" onSubmit={handleSubmit(onHandleSubmit)}>
+                        <div className="row justify-content-center">
+                            <div className="col-md-6">
                                 <div className="form-floating mb-3">
                                     <input type={isEdit ? "text" : "hidden"}
                                         className="form-control"
@@ -158,7 +161,7 @@ export default function AddProduct() {
                                                 id="flexRadioDefault3"
                                                 value="true"
                                                 checked={product.available}
-                                            {...register("available")} />
+                                                {...register("available")} />
                                             <label className="form-check-label" htmlFor="flexRadioDefault3">
                                                 Yes
                                             </label>
@@ -168,23 +171,37 @@ export default function AddProduct() {
                                                 type="radio"
                                                 id="flexRadioDefault4"
                                                 value="false"
-                                            checked={!product.available}
-                                            {...register("available")} />
+                                                checked={!product.available}
+                                                {...register("available")} />
                                             <label className="form-check-label" htmlFor="flexRadioDefault4">
                                                 No
                                             </label>
                                         </div>
                                     </div>
                                 </div>
-                                <div className="row justify-content-center mt-2">
-
-                                    <button className="col-md-3 btn btn-primary me-2" type="submit">Submit</button>
-                                    <button className="col-md-3 btn btn-danger" onClick={onHandleCancel}>Cancel</button>
-
+                            </div>
+                            <div className="col-md-3 mt-4">
+                                <img id="img"
+                                    className="img-thumbnail" alt="..."
+                                    style={{ height: '350px', width: '300px' }}
+                                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT9R9ssf51Sfg5JS_mM_G0CBsQ3sWfWImuuAg&usqp=CAU" />
+                                <div class="input-group mb-3" style={{ width: '300px' }}>
+                                    <input type="text"
+                                        className="form-control"
+                                        defaultValue={product.image}
+                                        {...register("image")}
+                                        onChange={(e) => showImage(e.target.value)} />
                                 </div>
-                            </form>
+                            </div>
                         </div>
-                    </div>
+                        <div className="row justify-content-center mt-2">
+
+                            <button className="col-md-3 btn btn-primary me-2" type="submit">Submit</button>
+                            <button className="col-md-3 btn btn-danger" onClick={onHandleCancel}>Cancel</button>
+
+                        </div>
+
+                    </form>
                 </div>
             </div>
         </div>

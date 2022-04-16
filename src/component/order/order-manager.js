@@ -14,13 +14,14 @@ export default function OrderManage() {
         navigate('/login')
     }
     const [orderList, setOrderList] = useState([])
+    const [detailList, setDetailList] = useState([])
     useEffect(() => {
         setOrderList([])
         try {
             if (token === null) {
                 navigate('/login')
             } else {
-                instance.get('admin/order', headers).then(resp => {
+                instance.get('/admin/order', headers).then(resp => {
                     console.log('order resp', resp.data)
                     setOrderList(resp.data)
                 })
@@ -32,30 +33,57 @@ export default function OrderManage() {
     }, []);
     const allOrderClick = () => {
         setOrderList([])
-        instance.get('admin/order', headers).then(resp => {
+        instance.get('/admin/order', headers).then(resp => {
             console.log('order resp', resp.data)
             setOrderList(resp.data)
         })
     }
     const allOrderSucess = () => {
         setOrderList([])
-        instance.get('admin/order?status=success', headers).then(resp => {
+        instance.get('/admin/order?status=success', headers).then(resp => {
             console.log('order resp', resp.data)
             setOrderList(resp.data)
         })
     }
     const allOrderPending = () => {
         setOrderList([])
-        instance.get('admin/order?status=pending', headers).then(resp => {
+        instance.get('/admin/order?status=pending', headers).then(resp => {
             console.log('order resp', resp.data)
             setOrderList(resp.data)
         })
     }
     const allOrderCancel = () => {
         setOrderList([])
-        instance.get('admin/order?status=cancel', headers).then(resp => {
+        instance.get('/admin/order?status=cancel', headers).then(resp => {
             console.log('order resp', resp.data)
             setOrderList(resp.data)
+        })
+    }
+    const confirmOrder = (data) => {
+        data.status = 'delivering';
+        instance.put('/admin/order', data, headers).then(resp => {
+            console.log(resp);
+            if (resp.status === 200) {
+                setOrderList(orderList.map(item => item.id == data.id ? data : item))
+            }
+        })
+    }
+    const cancelOrder = (data) => {
+        data.status = 'cancel';
+        instance.put('/admin/order', data, headers).then(resp => {
+            console.log(resp);
+            if (resp.status === 200) {
+                setOrderList(orderList.map(item => item.id == data.id ? data : item))
+            }
+        })
+    }
+
+    const showInfo = (id) => {
+        instance.get(`/admin/order/${id}`, headers).then(resp => {
+            console.log(resp);
+            if (resp.status === 200) {
+                setDetailList(resp.data)
+            }
         })
     }
 
@@ -110,14 +138,17 @@ export default function OrderManage() {
                                     <td>
                                         {item.status === 'pending' ?
                                             <>
-                                                <button className="me-2" style={{ border: 'none', background: 'none' }} >
+                                                <button className="me-2" style={{ border: 'none', background: 'none' }} onClick={() => confirmOrder(item)}>
                                                     <span className="material-icons-outlined" style={{ color: 'green' }}>done</span>
                                                 </button>
-                                                <button className="me-2" style={{ border: 'none', background: 'none' }} >
+                                                <button className="me-2" style={{ border: 'none', background: 'none' }} onClick={() => cancelOrder(item)} >
                                                     <span className="material-icons-outlined" style={{ color: 'red' }}>close</span>
                                                 </button>
                                             </> : ''}
-                                        <button className="me-2" style={{ border: 'none', background: 'none' }} >
+                                        <button className="me-2"
+                                            style={{ border: 'none', background: 'none' }}
+                                            onClick={() => showInfo(item.id)}
+                                            data-bs-toggle="modal" data-bs-target="#exampleModal">
                                             <span className="material-icons-outlined" style={{ color: 'blue' }}>info</span>
                                         </button>
 
@@ -126,6 +157,46 @@ export default function OrderManage() {
                             )}
                         </tbody>
                     </table>
+                </div>
+            </div>
+
+            {/* <!-- Modal --> */}
+            <div className="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div className="modal-dialog modal-lg">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h5 className="modal-title" id="exampleModalLabel">Order Detail List Of OrderID</h5>
+                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div className="modal-body">
+                            <table className="table table-striped table-bordered border-primary">
+                                <thead>
+                                    <tr>
+                                        <th>STT</th>
+                                        <th className="col-2">Product Name</th>
+                                        <th className="">Price</th>
+                                        <th className="">Quantity</th>
+                                        <th className="">Toltal</th>
+                                    
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {detailList.map((item, index) =>
+                                        <tr>
+                                            <th scope="row">{index + 1}</th>
+                                            <td>{item.productName}</td>
+                                            <td>{item.price}</td>
+                                            <td>{item.quantity}</td>
+                                            <td>{item.price * item.quantity}</td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div className="modal-footer">
+                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
