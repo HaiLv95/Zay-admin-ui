@@ -15,7 +15,7 @@ export default function OrderManage() {
     }
     const [orderList, setOrderList] = useState([])
     useEffect(() => {
-
+        setOrderList([])
         try {
             if (token === null) {
                 navigate('/login')
@@ -23,8 +23,7 @@ export default function OrderManage() {
                 instance.get('admin/order', headers).then(resp => {
                     console.log('order resp', resp.data)
                     setOrderList(resp.data)
-                }
-                )
+                })
             }
         } catch (error) {
             console.log('errors', error)
@@ -32,17 +31,32 @@ export default function OrderManage() {
         }
     }, []);
     const allOrderClick = () => {
-        instance.get('admin/order', headers).then(resp =>
-            console.log(resp))
+        setOrderList([])
+        instance.get('admin/order', headers).then(resp => {
+            console.log('order resp', resp.data)
+            setOrderList(resp.data)
+        })
     }
     const allOrderSucess = () => {
-
+        setOrderList([])
+        instance.get('admin/order?status=success', headers).then(resp => {
+            console.log('order resp', resp.data)
+            setOrderList(resp.data)
+        })
     }
     const allOrderPending = () => {
-
+        setOrderList([])
+        instance.get('admin/order?status=pending', headers).then(resp => {
+            console.log('order resp', resp.data)
+            setOrderList(resp.data)
+        })
     }
     const allOrderCancel = () => {
-
+        setOrderList([])
+        instance.get('admin/order?status=cancel', headers).then(resp => {
+            console.log('order resp', resp.data)
+            setOrderList(resp.data)
+        })
     }
 
     return (
@@ -74,7 +88,8 @@ export default function OrderManage() {
                                 <th className="">Phone Number </th>
                                 <th className="">Order Date</th>
                                 <th className="">Address</th>
-                                <th className="col-1">Action</th>
+                                <th className="">Status</th>
+                                <th className="col-2">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -87,10 +102,10 @@ export default function OrderManage() {
                                     <td>{item.orderDate}</td>
                                     <td>{item.address}</td>
                                     <td>
-                                        {item.status === 'pending' ? <span>Chờ xác nhận</span> : ''}
-                                        {item.status === 'delivering' ? <span>Chờ giao hàng</span> : ''}
+                                        {item.status === 'pending' ? <span style={{ color: 'green', fontWeight: 'bold' }}>Chờ xác nhận</span> : ''}
+                                        {item.status === 'delivering' ? <span style={{ color: 'blue' }}>Đang giao hàng</span> : ''}
                                         {item.status === 'success' ? <span>Thành công</span> : ''}
-                                        {item.status === 'cancel' ? <span>Đã hủy</span> : ''}
+                                        {item.status === 'cancel' ? <span style={{ color: 'red' }}>Đã hủy</span> : ''}
                                     </td>
                                     <td>
                                         {item.status === 'pending' ?
