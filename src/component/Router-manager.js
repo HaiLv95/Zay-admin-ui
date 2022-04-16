@@ -3,6 +3,7 @@ import AccountManage from "./account/account-manager";
 import AddAccount from "./account/add-account";
 import Login from "./home/login";
 import NavBar from "./home/navBar";
+import OrderManage from "./order/order-manager";
 import AddProduct from "./product/add-product";
 import ProductManage from "./product/product-manager";
 
@@ -20,6 +21,7 @@ export default function RouterManager() {
                     <Route path='/account/edit/:username' element={<AddAccount />}></Route>
                     <Route path='/account/manager' element={<AccountManage />}></Route>
                     <Route path='/product/manager' element={<ProductManage />}></Route>
+                    <Route path='/order/manager' element={<OrderManage />}></Route>
                     <Route path='/forgotpassword' element={'<h1>forgotpassword</h1>'}></Route>
                     <Route path='/signup' element={'<h1>signup</h1>'}></Route>
                     <Route path='/login' element={<Login />}></Route>

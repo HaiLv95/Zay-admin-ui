@@ -13,6 +13,10 @@ export default function AddProduct() {
     const [product, setProduct] = useState({});
     const [categories, setCategories] = useState([])
     const [isEdit, setEdit] = useState(false);
+    const token = localStorage.getItem('token');
+    if (token === null) {
+        navigate('/login')
+    }
     //get id from url
     const { id } = useParams();
     useEffect(() => {

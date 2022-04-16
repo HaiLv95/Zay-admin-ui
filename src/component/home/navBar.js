@@ -5,27 +5,32 @@ import { removeAllProductCreator } from '../../redux/actionCreator/product/produ
 export default function NavBar() {
     const dispatch = useDispatch();
     const navigate = useNavigate()
-    const authenticated = localStorage.getItem('authenticated')
     const username = localStorage.getItem('username')
     const onHandleLogout = () => {
         localStorage.setItem('token', '');
-        localStorage.setItem('authenticated', 'false');
         localStorage.setItem('username', '')
         dispatch(removeAllAccountCreator());
         dispatch(removeAllProductCreator())
     }
     const onAccountManage = () => {
-        if (authenticated === 'false') {
+        if (localStorage.getItem('token') === '') {
             navigate('/login')
         } else {
             navigate('/account/manager')
         }
     }
     const onProductManage = () => {
-        if (authenticated === 'false') {
+        if (localStorage.getItem('token') === '') {
             navigate('/login')
         } else {
             navigate('/product/manager')
+        }
+    }
+    const onOrderManage = () => {
+        if (localStorage.getItem('token') === '') {
+            navigate('/login')
+        } else {
+            navigate('/order/manager')
         }
     }
     return (
@@ -43,17 +48,20 @@ export default function NavBar() {
                         <li className="nav-item">
                             <button className="nav-link" onClick={onProductManage} style={{ border: 'none', background: 'none' }} >Product Manage</button>
                         </li>
+                        <li className="nav-item">
+                            <button className="nav-link" onClick={onOrderManage} style={{ border: 'none', background: 'none' }} >Order List</button>
+                        </li>
                     </ul>
                     <div className='d-flex'>
                         <input className="form-control me-4" type="search" placeholder="Search" aria-label="Search" />
                         <div className='btn-group'>
                             <button type="button" className="btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                {(authenticated ==='true') ? username :
+                                {(localStorage.getItem('token') !== '') ? username :
                                     <span className="material-icons-outlined">
                                         account_circle
                                     </span>}
                             </button>
-                            {(authenticated === 'true') ?
+                            {(localStorage.getItem('token') !== '') ?
                                 <ul className="dropdown-menu dropdown-menu-end">
                                     <li><button className="dropdown-item" onClick={onHandleLogout}>Sign-out</button></li>
                                 </ul>

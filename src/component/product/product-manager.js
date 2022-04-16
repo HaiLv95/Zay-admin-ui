@@ -7,15 +7,13 @@ import { productSelector } from "../../redux/actionCreator/product/productSelect
 export default function ProductManage() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const authenticated = localStorage.getItem('authenticated')
-    console.log('auth', authenticated)
-    if (authenticated === 'false') {
+    const token = localStorage.getItem('');
+    if (token === '') {
         navigate('/login')
     }
-    const token = localStorage.getItem('token');
     useEffect(() => {
         try {
-            if (token === null) {
+            if (token === '') {
                 navigate('/login')
             } else {
                 getAllProduct().then(resp => {
@@ -35,7 +33,7 @@ export default function ProductManage() {
     const products = useSelector(state => productSelector(state));
     console.log(products)
     const onHandleLock = async (id) => {
-        if (authenticated === 'false') {
+        if (token === null) {
             navigate('/login')
         }
         await deleteProduct(id).then(resp =>       
@@ -46,7 +44,7 @@ export default function ProductManage() {
             )
     }
     const onHandleEdit = (id) => {
-        if (authenticated === 'false') {
+        if (token === null) {
             navigate('/login')
         }
         navigate(`/product/edit/${id}`)
